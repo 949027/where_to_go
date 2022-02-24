@@ -6,5 +6,5 @@ class PlaceAdmin(admin.ModelAdmin):
     list_display = ('title', 'description_short',)
 
 
-admin.site.register(Place)
+admin.site.register(Place, PlaceAdmin)
 
