@@ -1,34 +1,46 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, JsonResponse
+
+from places.models import Place
+
+
+def show_place(request, placeId):
+    place = get_object_or_404(Place, placeId=placeId)
+    response_data = {
+        "title": place.title,
+        "imgs": [image.file.url for image in place.images.all()],
+        "description_short": place.description_short,
+        "description_long": place.description_long,
+        "coordinates": {
+            "lng": place.lng,
+            "lat": place.lat,
+            }
+        }
+    return JsonResponse(
+        response_data,
+        json_dumps_params={'ensure_ascii': False, 'indent': 2},
+    )
 
 
 def index(request):
-    context = {'places': {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [37.62, 55.793676]
-          },
-          "properties": {
-            "title": "«Легенды Москвы",
-            "placeId": "moscow_legends",
-            "detailsUrl": "./static/where_to_go/places/moscow_legends.json"
-          }
-        },
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [37.64, 55.753676]
-          },
-          "properties": {
-            "title": "Крыши24.рф",
-            "placeId": "roofs24",
-            "detailsUrl": "./static/where_to_go/places/roofs24.json"
-          }
+    features = []
+    for place in Place.objects.all():
+        feature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [place.lng, place.lat]
+            },
+            "properties": {
+                "title": place.title,
+                "placeId": place.placeId,
+                "detailsUrl": ''
+            }
         }
-      ]
+        features.append(feature)
+
+    context = {'places': {
+        "type": "FeatureCollection",
+        "features": features,
     }}
     return render(request, 'index.html', context=context)
