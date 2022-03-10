@@ -1,6 +1,7 @@
 import os
 from urllib.parse import urlparse
 import requests
+from progress.bar import Bar
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 
@@ -24,16 +25,20 @@ class Command(BaseCommand):
             lat=place_data['coordinates']['lat'],
         )
 
-        for number, image_url in enumerate(place_data['imgs']):
+        images_urls = place_data['imgs']
+        bar = Bar('Loading photo...', max=len(images_urls))
+
+        for number, image_url in enumerate(images_urls):
             response = requests.get(image_url)
             response.raise_for_status()
 
             image_content = ContentFile(response.content)
             image_path = urlparse(image_url).path
             image_name = os.path.basename(image_path)
-            print(place)
             image, _ = Image.objects.get_or_create(
                 number=number,
                 place=place,
             )
             image.file.save(image_name, image_content, save=True)
+            bar.next()
+        bar.finish()
