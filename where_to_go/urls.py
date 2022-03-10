@@ -21,7 +21,7 @@ from .views import index, show_place
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('places/<str:placeId>/', show_place),
+    path('places/<int:place_id>/', show_place),
     path('tinymce/', include('tinymce.urls')),
     path('', index),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -5,8 +5,8 @@ from django.urls import reverse
 from places.models import Place
 
 
-def show_place(request, placeId):
-    place = get_object_or_404(Place, placeId=placeId)
+def show_place(request, place_id):
+    place = get_object_or_404(Place, id=place_id)
     response_data = {
         "title": place.title,
         "imgs": [image.file.url for image in place.images.all()],
@@ -34,8 +34,8 @@ def index(request):
             },
             "properties": {
                 "title": place.title,
-                "placeId": place.placeId,
-                "detailsUrl": reverse(show_place, args=[place.placeId]),
+                "placeId": place.id,
+                "detailsUrl": reverse(show_place, args=[place.id]),
             }
         }
         features.append(feature)
