@@ -29,16 +29,20 @@ class Command(BaseCommand):
         bar = Bar('Loading photo...', max=len(images_urls))
 
         for number, image_url in enumerate(images_urls):
-            response = requests.get(image_url)
-            response.raise_for_status()
+            try:
+                response = requests.get(image_url)
+                response.raise_for_status()
 
-            image_content = ContentFile(response.content)
-            image_path = urlparse(image_url).path
-            image_name = os.path.basename(image_path)
-            image, _ = Image.objects.get_or_create(
-                number=number,
-                place=place,
-            )
-            image.file.save(image_name, image_content, save=True)
-            bar.next()
+                image_content = ContentFile(response.content)
+                image_path = urlparse(image_url).path
+                image_name = os.path.basename(image_path)
+                image, _ = Image.objects.get_or_create(
+                    number=number,
+                    place=place,
+                )
+                image.file.save(image_name, image_content, save=True)
+                bar.next()
+            except requests.HTTPError as err:
+                print(err)
+
         bar.finish()
