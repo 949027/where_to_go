@@ -15,7 +15,12 @@ class Place(models.Model):
 
 class Image(models.Model):
     number = models.IntegerField('Номер')
-    place = models.ForeignKey('Place', on_delete=models.CASCADE, related_name='images', verbose_name='Место')
+    place = models.ForeignKey(
+        'Place',
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='Место'
+    )
     file = models.ImageField('Изображения', blank=True)
 
     def __str__(self):
