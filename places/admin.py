@@ -22,6 +22,7 @@ class ImageInline(SortableInlineAdminMixin, admin.TabularInline):
         )
 
 
+@admin.register(Place)
 class PlaceAdmin(admin.ModelAdmin):
     list_display = ('title', 'description_short',)
     search_fields = ('title', )
@@ -30,9 +31,6 @@ class PlaceAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     pass
-
-
-admin.site.register(Image, ImageAdmin)
-admin.site.register(Place, PlaceAdmin)
