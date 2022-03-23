@@ -18,14 +18,14 @@ class Place(models.Model):
 
 
 class Image(models.Model):
-    number = models.IntegerField('Номер')
+    number = models.IntegerField('Номер', blank=True)
     place = models.ForeignKey(
         'Place',
         on_delete=models.CASCADE,
         related_name='images',
         verbose_name='Место'
     )
-    file = models.ImageField('Изображения', blank=True)
+    file = models.ImageField('Изображения')
 
     def __str__(self):
         return f'{self.number} {self.place}'
