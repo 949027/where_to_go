@@ -18,11 +18,13 @@ class Command(BaseCommand):
         response.raise_for_status()
         raw_place = response.json()
         place, _ = Place.objects.get_or_create(
-            title=raw_place['title'],
             description_short=raw_place['description_short'],
             description_long=raw_place['description_long'],
-            lng=raw_place['coordinates']['lng'],
-            lat=raw_place['coordinates']['lat'],
+            defaults={
+                'title': raw_place['title'],
+                'lng': raw_place['coordinates']['lng'],
+                'lat': raw_place['coordinates']['lat'],
+            }
         )
 
         images_urls = raw_place['imgs']
