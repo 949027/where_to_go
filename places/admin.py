@@ -12,13 +12,9 @@ class ImageInline(SortableInlineAdminMixin, admin.TabularInline):
     ]
 
     def headshot_image(self, obj):
-        image_width = 200
-        image_height = obj.file.height * image_width / obj.file.width
         return format_html(
-            '<img src="{}" width="{}" height={} />',
+            '<img src="{}" style="max-width: 200px;"/>',
             obj.file.url,
-            image_width,
-            image_height,
         )
 
 
